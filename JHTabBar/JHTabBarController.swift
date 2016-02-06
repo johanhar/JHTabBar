@@ -14,8 +14,8 @@ public class JHTabBarController: UITabBarController {
     var markerLeftConstraint: NSLayoutConstraint!
     var markerTopConstraint: NSLayoutConstraint!
     
-    let markerHeight = 5
-    let markerWidth = 60
+    let markerHeight = 6
+    let markerWidth = 65
     
     override public func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +76,11 @@ public class JHTabBarController: UITabBarController {
         marker = UIView()
         marker.translatesAutoresizingMaskIntoConstraints = false
         marker.backgroundColor = UIColor.blackColor()
+        
+        /*
+        marker.layer.borderColor = UIColor.redColor().CGColor
+        marker.layer.borderWidth = 1
+        */
         
         view.addSubview(marker)
         
@@ -168,10 +173,37 @@ public class JHTabBarController: UITabBarController {
     }
     
     func setMarkerMask() {
-        let path = UIBezierPath(roundedRect: marker.bounds, byRoundingCorners: [.BottomLeft, .BottomRight], cornerRadii: CGSize(width: 20, height: 5))
+        /*let path = UIBezierPath(roundedRect: marker.bounds, byRoundingCorners: [.BottomLeft, .BottomRight], cornerRadii: CGSize(width: 2, height: 2))*/
+        
+        let path = createBezierPath(CGSize(width: markerWidth, height: markerHeight))
+        
         let mask = CAShapeLayer()
         mask.path = path.CGPath
         marker.layer.mask = mask
     }
     
+    func createBezierPath(forSizedRect: CGSize) -> UIBezierPath {
+        let x10 = forSizedRect.width * 10 / 100
+        let x20 = forSizedRect.width * 20 / 100
+        let x25 = forSizedRect.width * 25 / 100
+        let x75 = forSizedRect.width * 75 / 100
+        let x80 = forSizedRect.width * 80 / 100
+        let x90 = forSizedRect.width * 90 / 100
+        
+        let path = UIBezierPath()
+        
+        path.moveToPoint(CGPoint(x: 0, y: 0))
+        
+        path.addLineToPoint(CGPoint(x: forSizedRect.width, y: 0))
+        
+        path.addCurveToPoint(CGPoint(x: x75, y: forSizedRect.height), controlPoint1: CGPoint(x: x90, y: forSizedRect.height), controlPoint2: CGPoint(x: x80, y: forSizedRect.height))
+        
+        path.addLineToPoint(CGPoint(x: x25, y: forSizedRect.height))
+        
+        path.addCurveToPoint(CGPoint(x: 0, y: 0), controlPoint1: CGPoint(x: x20, y: forSizedRect.height), controlPoint2: CGPoint(x: x10, y: forSizedRect.height))
+        
+        path.closePath()
+        
+        return path
+    }
 }
